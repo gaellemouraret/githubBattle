@@ -4,6 +4,20 @@ import Home from './Home';
 import getprofile from './utils/api';
 import './App.css';
 
+class Player extends Component {
+  render() {
+    const {playerName, playerAvatar, callGetProfile(), onChange} = this.props;
+    return(
+      <div>
+        <h2>User</h2>
+        <img src={playerAvatar} />
+        <input placeholder="Github username" value={playerName} onChange={onChange} />
+        <button onClick={() => this.callGetProfile()}>VALIDER</button>
+      </div>
+    )}
+};
+
+
 class Battle extends Component {
     state = {
       avatar_urlP1: null,
@@ -26,23 +40,16 @@ class Battle extends Component {
   };
 
 
-  const Player = (playerName, playerAvatar) => {
-    render() {
-      return(
-        <h2>User</h2>
-        <img src={playerAvatar} />
-        <input placeholder="Github username" value={playerName} onChange={this.onChange.bind(this)} />
-        <button onClick={() => this.callGetProfile(playerName, 'playerAvatar')}>VALIDER</button>
-      )}
-  };
-
-
-
   render() {
     return (
       <div>
         <h2>Battle</h2>
-        <Player playerName={this.state.playerOne} playerAvatar={this.state.avatar_urlP1} />
+        <Player 
+          playerName={this.state.playerOne}
+          playerAvatar={this.state.avatar_urlP1}
+          onChange={this.onChange.bind(this)}
+          callGetProfile={callGetProfile(playerOne, 'avatar_urlP1')}
+          />
       </div>
     )};
 };
