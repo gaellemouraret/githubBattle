@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Popular from './Popular';
 import Home from './Home';
+import { Link } from 'react-router-dom';
 import getprofile from './utils/api';
 import propTypes from 'prop-types';
 import './App.css';
@@ -83,9 +84,14 @@ class Battle extends Component {
             />
         }
 
-        {this.state.playerOne && this.state.playerTwo &&
-          <button>Battle</button>
-        }
+        {/* {this.state.playerOne && this.state.playerTwo && */}
+          <Link to={{
+              pathname: this.props.match.url + "/results",
+              search: "?playerOne=" + this.state.playerOne +
+              "&playerTwo=" + this.state.playerTwo
+            }}
+          className="button">Battle</Link>
+        {/* } */}
 
       </div>
     )};

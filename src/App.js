@@ -10,6 +10,7 @@ import axios from 'axios';
 import Home from './Home';
 import Battle from './Battle';
 import Popular from './Popular';
+import Results from './Results'
 import './App.css';
 
 class App extends Component {
@@ -31,7 +32,8 @@ class App extends Component {
             </ul>
             <Switch>
               <Route exact path="/" component={Home}/>
-              <Route path="/Battle" component={Battle}/>
+              <Route exact path="/Battle" component={Battle}/>
+              <Route path="/Battle/results" component={Results}/>
               <Route path="/Popular" component={Popular}/>
               <Route component={NoMatch} />
             </Switch>
