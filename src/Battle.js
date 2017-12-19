@@ -1,74 +1,94 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Popular from './Popular';
 import Home from './Home';
 import getprofile from './utils/api';
+import propTypes from 'prop-types';
 import './App.css';
 
-class Player extends Component {
+class PlayerInput extends Component {
+  state = {
+    playerName: null,
+  }
+
+  onChange = (event) => {
+    this.setState({playerName: event.target.value});
+  }
+
+  constructUrl = () => {
+    let url = "https://github.com/" + this.state.playerName + ".png?size=200"
+    this.props.getAvatarUrl(url, this.props.id)
+  }
+
   render() {
-    const {playerName, playerAvatar, callGetProfile(), onChange} = this.props;
+    const {playerName, playerAvatar, onChange} = this.props;
     return(
       <div>
-        <h2>User</h2>
-        <img src={playerAvatar} />
-        <input placeholder="Github username" value={playerName} onChange={onChange} />
-        <button onClick={() => this.callGetProfile()}>VALIDER</button>
+        <h2>{this.props.label}</h2>
+        <input placeholder="Github username" value={playerName} onChange={this.onChange} />
+        <button onClick={() =>
+          this.constructUrl()
+        } >VALIDER</button>
       </div>
     )}
 };
 
+PlayerInput.propTypes = {
+  id: propTypes.string.isRequired,
+  label: propTypes.string,
+  getAvatarUrl: propTypes.func
+}
+
 
 class Battle extends Component {
     state = {
-      avatar_urlP1: null,
-      avatar_urlP2: null,
       playerOne: null,
       playerTwo: null,
     }
 
-  onChange(event) {
-    this.setState({playerOne: event.target.value});
+  onChange = (event, player) => {
+    this.setState({[player]: event.target.value});
   }
 
-  onChangeRight(event) {
-    this.setState({playerTwo: event.target.value})
+  updatePlayerUrl = (url, playerId) => {
+    this.setState({[playerId]: url})
   }
-
-  callGetProfile = (name, player) => {
-    console.log(getprofile(name));
-    getprofile(name).then(response => this.setState({[player]: response}));
-  };
-
 
   render() {
     return (
       <div>
         <h2>Battle</h2>
-        <Player 
-          playerName={this.state.playerOne}
-          playerAvatar={this.state.avatar_urlP1}
-          onChange={this.onChange.bind(this)}
-          callGetProfile={callGetProfile(playerOne, 'avatar_urlP1')}
-          />
+        {this.state.playerOne ?
+          <div>
+            <h2>Player One</h2>
+            <img src={this.state.playerOne} />
+          </div>
+          :
+          <PlayerInput
+            id={'playerOne'}
+            label={'Player One'}
+            getAvatarUrl={this.updatePlayerUrl}
+            />
+        }
+
+        {this.state.playerTwo ?
+          <div>
+            <h2>Player Two</h2>
+            <img src={this.state.playerTwo} />
+          </div>
+          :
+          <PlayerInput
+            id={'playerTwo'}
+            label={'Player Two'}
+            getAvatarUrl={this.updatePlayerUrl}
+            />
+        }
+
+        {this.state.playerOne && this.state.playerTwo &&
+          <button>Battle</button>
+        }
+
       </div>
     )};
 };
 
 export default Battle;
-
-
-/*
-
-<div className="left">
-  <h2>User</h2>
-  <img src={this.state.avatar_urlP1} />
-  <input placeholder="Github username" value={this.state.playerOne} onChange={this.onChange.bind(this)} />
-  <button onClick={() => this.callGetProfile(this.state.playerOne, 'avatar_urlP1')}>VALIDER</button>
-</div>
-<div className="right">
-  <h2>User</h2>
-  <img src={this.state.avatar_urlP2} />
-  <input placeholder="Github username" value={this.state.playerTwo} onChange={this.onChangeRight.bind(this)} />
-  <button onClick={() => this.callGetProfile(this.state.playerTwo, 'avatar_urlP2')}>VALIDER</button>
-</div>
-*/
