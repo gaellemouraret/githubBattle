@@ -17,7 +17,8 @@ class PlayerInput extends Component {
 
   constructUrl = () => {
     let url = "https://github.com/" + this.state.playerName + ".png?size=200"
-    this.props.getAvatarUrl(url, this.props.id)
+    let name = this.state.playerName
+    this.props.updatePlayer(url, name, this.props.id)
   }
 
   render() {
@@ -26,7 +27,7 @@ class PlayerInput extends Component {
       <div>
         <h2>{this.props.label}</h2>
         <input placeholder="Github username" value={playerName} onChange={this.onChange} />
-        <button onClick={() =>
+        <button onClick={() => 
           this.constructUrl()
         } >VALIDER</button>
       </div>
@@ -36,7 +37,7 @@ class PlayerInput extends Component {
 PlayerInput.propTypes = {
   id: propTypes.string.isRequired,
   label: propTypes.string,
-  getAvatarUrl: propTypes.func
+  updatePlayer: propTypes.func,
 }
 
 
@@ -44,17 +45,27 @@ class Battle extends Component {
     state = {
       playerOne: null,
       playerTwo: null,
+      nameOne: null,
+      nameTwo: null,
     }
 
   onChange = (event, player) => {
     this.setState({[player]: event.target.value});
   }
 
-  updatePlayerUrl = (url, playerId) => {
+  updatePlayer = (url, name, playerId) => {
     this.setState({[playerId]: url})
+    if (playerId === 'playerOne') {
+      this.setState({nameOne: name})
+    } else {
+      this.setState({nameTwo: name})
+    }
   }
 
   render() {
+    const urlOne = this.state.playerOne;
+    const urlTwo = this.state.playerTwo;
+    //console.log('one', urlOne, 'two', urlTwo);
     return (
       <div>
         <h2>Battle</h2>
@@ -67,7 +78,7 @@ class Battle extends Component {
           <PlayerInput
             id={'playerOne'}
             label={'Player One'}
-            getAvatarUrl={this.updatePlayerUrl}
+            updatePlayer={this.updatePlayer}
             />
         }
 
@@ -80,15 +91,15 @@ class Battle extends Component {
           <PlayerInput
             id={'playerTwo'}
             label={'Player Two'}
-            getAvatarUrl={this.updatePlayerUrl}
+            updatePlayer={this.updatePlayer}
             />
         }
 
         {/* {this.state.playerOne && this.state.playerTwo && */}
           <Link to={{
               pathname: this.props.match.url + "/results",
-              search: "?playerOne=" + this.state.playerOne +
-              "&playerTwo=" + this.state.playerTwo
+              search: "?playerOne=" + this.state.nameOne +
+              "&playerTwo=" + this.state.nameTwo
             }}
           className="button">Battle</Link>
         {/* } */}

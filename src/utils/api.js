@@ -4,7 +4,7 @@ function getprofile(name) {
   return axios.get(`https://api.github.com/users/${name}`)
   .then((response) => {
     //console.log('$$$', response.data.avatar_url);
-    return response.data.avatar_url
+    return response.data
   })
   .catch(function (error) {
     console.log(error);
